@@ -25,12 +25,11 @@ npx http-server@14.1.1 docs -p 5180
 
 Mở http://localhost:5180
 
-## Đưa lên GitHub Pages để cài vào điện thoại
+## Dùng app
 
-1. Vào github.com, tạo repo mới, ví dụ `so-phong-thuy`, chọn Public.
-2. Bấm "uploading an existing file", kéo **toàn bộ nội dung bên trong thư mục `app/`** (không kéo cả thư mục) vào, rồi Commit.
-3. Vào Settings → Pages → Source: "Deploy from a branch", Branch: `main`, thư mục `/ (root)` → Save.
-4. Đợi 1–2 phút, link sẽ có dạng `https://<tên-github>.github.io/so-phong-thuy/`.
+App chạy tại **https://phuhung2805.github.io/so-phong-thuy/**
+
+GitHub Pages phục vụ thư mục `docs/` trên nhánh `main`, nên mỗi lần push là app tự cập nhật sau 1–2 phút.
 
 ## Cài lên điện thoại
 
