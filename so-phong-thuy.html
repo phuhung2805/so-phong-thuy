@@ -1,0 +1,529 @@
+<title>Sổ Phong Thủy</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Be+Vietnam+Pro:wght@400;500;600&display=swap">
+<style>
+/* Bố cục: một cột sổ tay, đầu trang như bìa sổ có ấn son, các tab là trang sổ */
+:root {
+  --paper: #EDEFE8; --card: #F8F9F5; --ink: #1B1D1A; --muted: #5C6259; --line: #CBD0C4;
+  --son: #B42318; --son-soft: #F4DCD6; --gold: #87661B; --jade: #2C6A4C; --jade-soft: #D8EBDF; --warn: #9A5B00; --warn-soft: #F5E6C8;
+  --f-display: "Cormorant Garamond", "Noto Serif", Georgia, serif;
+  --f-body: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #13100E; --card: #1D1815; --ink: #ECE3D3; --muted: #A79D8D; --line: #3A312A;
+  --son: #E8584A; --son-soft: #3A1A16; --gold: #D4AF5C; --jade: #74C59A; --jade-soft: #173226; --warn: #E3A64A; --warn-soft: #33260F; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #13100E; --card: #1D1815; --ink: #ECE3D3; --muted: #A79D8D; --line: #3A312A;
+  --son: #E8584A; --son-soft: #3A1A16; --gold: #D4AF5C; --jade: #74C59A; --jade-soft: #173226; --warn: #E3A64A; --warn-soft: #33260F; color-scheme: dark; }
+
+body { background: var(--paper); color: var(--ink); font: 15px/1.6 var(--f-body); }
+.wrap { max-width: 920px; margin: 0 auto; padding-block: 28px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 700; line-height: 1.15; text-wrap: balance; margin: 0; }
+h2 { font-size: 1.9rem; }
+h3 { font-size: 1.35rem; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: .85rem; }
+.label { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+
+/* Bìa */
+header.cover { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; padding-bottom: 20px; border-bottom: 2px solid var(--ink); }
+.seal { width: 64px; height: 64px; flex: none; background: var(--son); color: #FFF7EC; display: grid; grid-template-columns: 1fr 1fr; place-items: center; font: 600 1.35rem/1 "Noto Serif SC", "SimSun", serif; border-radius: 6px; transform: rotate(-4deg); padding: 6px; }
+.cover .t { flex: 1 1 260px; min-width: 0; }
+.cover h1 { font-size: clamp(2.2rem, 6vw, 3.2rem); }
+.cover .t p { color: var(--muted); }
+.zone { display: flex; flex-direction: column; gap: 4px; }
+@media (max-width: 520px) {
+  header.cover { gap: 12px 14px; padding-bottom: 14px; }
+  .seal { width: 46px; height: 46px; font-size: 1rem; padding: 4px; }
+  .cover .t { flex: 1 1 0; }
+  .cover h1 { font-size: 2rem; }
+  .cover .t p { font-size: .85rem; line-height: 1.4; }
+  .zone { flex: 1 1 100%; flex-direction: row; align-items: center; gap: 10px; }
+  .zone select { flex: 1; }
+  nav.tabs { margin: 12px 0 18px; scrollbar-width: none; }
+  .wrap { padding-block: 16px 48px; }
+}
+select, input { font: inherit; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; min-width: 0; }
+select:focus-visible, input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--son); outline-offset: 2px; }
+
+/* Tab */
+nav.tabs { display: flex; gap: 4px; overflow-x: auto; margin: 18px 0 26px; border-bottom: 1px solid var(--line); }
+nav.tabs a { text-decoration: none; color: var(--muted); padding: 10px 14px; font-weight: 500; white-space: nowrap; border-bottom: 3px solid transparent; margin-bottom: -1px; }
+nav.tabs a[aria-current="page"] { color: var(--ink); border-color: var(--son); }
+nav.tabs a:hover { color: var(--ink); }
+
+section.page { display: grid; gap: 22px; }
+.intro { max-width: 62ch; color: var(--muted); }
+form.inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px 16px; align-items: end; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+form.inputs label { display: flex; flex-direction: column; gap: 4px; font-size: .85rem; color: var(--muted); font-weight: 500; }
+form.inputs .grp { grid-column: 1 / -1; font-family: var(--f-display); font-size: 1.1rem; font-weight: 700; color: var(--ink); margin-top: 4px; }
+.example { font-size: .8rem; color: var(--warn); background: var(--warn-soft); padding: 2px 8px; border-radius: 99px; justify-self: start; }
+
+/* Tờ lịch */
+.bloc { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); background: var(--card); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.bloc .solar { text-align: center; padding: 22px 16px; border-right: 1px dashed var(--line); }
+.bloc .solar .big { font: 700 7rem/0.95 var(--f-display); color: var(--son); font-variant-numeric: lining-nums; }
+.bloc .solar .dow { font-family: var(--f-display); font-size: 1.6rem; font-weight: 600; }
+.bloc .lunar { padding: 22px; display: grid; gap: 14px; align-content: start; }
+.bloc .ld { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.bloc .ld .n { font: 700 3.2rem/1 var(--f-display); }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; font-weight: 500; }
+@media (max-width: 620px) { .bloc { grid-template-columns: 1fr; } .bloc .solar { border-right: 0; border-bottom: 1px dashed var(--line); } .bloc .solar .big { font-size: 5.5rem; } }
+
+.pill { display: inline-block; font-size: .78rem; font-weight: 600; padding: 2px 10px; border-radius: 99px; white-space: nowrap; }
+.pill.good, .pill.tot { background: var(--jade-soft); color: var(--jade); }
+.pill.kha { background: var(--warn-soft); color: var(--warn); }
+.pill.bad, .pill.xau, .pill.tranh { background: var(--son-soft); color: var(--son); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.hours { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+.hours .h { border: 1px solid var(--line); border-radius: 8px; padding: 6px 4px; text-align: center; font-size: .8rem; color: var(--muted); }
+.hours .h b { display: block; font-size: .95rem; color: var(--ink); }
+.hours .h.on { border-color: var(--jade); background: var(--jade-soft); }
+.hours .h.on b { color: var(--jade); }
+@media (max-width: 520px) { .hours { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+.note { border-left: 3px solid var(--gold); padding: 10px 14px; background: var(--card); border-radius: 0 8px 8px 0; font-size: .92rem; }
+
+/* Thẻ kết quả */
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.verdict { padding: 14px 16px; border-radius: 10px; display: grid; gap: 4px; border: 1px solid var(--line); background: var(--card); }
+.verdict.good { border-color: var(--jade); }
+.verdict.bad { border-color: var(--son); }
+.verdict .v { font-family: var(--f-display); font-size: 1.35rem; font-weight: 700; }
+.verdict.good .v { color: var(--jade); }
+.verdict.bad .v { color: var(--son); }
+.headline { font-family: var(--f-display); font-size: 1.7rem; font-weight: 700; }
+.headline.good { color: var(--jade); }
+.headline.bad { color: var(--son); }
+
+/* Tứ trụ */
+.pillars { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.pillar { border: 1px solid var(--line); border-radius: 10px; text-align: center; padding: 12px 6px; background: var(--card); }
+.pillar .c { font: 700 1.9rem/1.1 var(--f-display); color: var(--son); }
+.pillar .z { font: 700 1.9rem/1.1 var(--f-display); }
+.pillar .hh { font-size: .78rem; color: var(--muted); margin-top: 4px; }
+
+/* La bàn */
+.compass-wrap { display: grid; grid-template-columns: minmax(0, 320px) minmax(0, 1fr); gap: 20px; align-items: center; }
+@media (max-width: 640px) { .compass-wrap { grid-template-columns: 1fr; } }
+svg.compass { width: 100%; max-width: 320px; height: auto; margin: 0 auto; display: block; }
+svg.compass text { font-family: var(--f-body); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.scroll { overflow-x: auto; }
+.ok { color: var(--jade); font-weight: 600; }
+.no { color: var(--son); font-weight: 600; }
+
+/* Danh sách ngày */
+.daybar { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; }
+.daybar label { display: flex; gap: 8px; align-items: center; color: var(--muted); font-size: .9rem; }
+.days { display: grid; gap: 10px; }
+.day { display: grid; grid-template-columns: 92px 120px minmax(0, 1fr); gap: 14px; background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--line); border-radius: 8px; padding: 12px 14px; }
+.day.tot { border-left-color: var(--jade); }
+.day.kha { border-left-color: var(--warn); }
+.day.xau, .day.tranh { border-left-color: var(--son); opacity: .82; }
+.day .dd b { font: 700 1.7rem/1 var(--f-display); display: block; font-variant-numeric: lining-nums; }
+.day .dd span, .day .dl { font-size: .85rem; color: var(--muted); }
+.day .dl b { color: var(--ink); font-weight: 600; }
+.day .dr { display: grid; gap: 6px; min-width: 0; }
+.day .why { font-size: .85rem; }
+.day .why .g { color: var(--jade); }
+.day .why .x { color: var(--son); }
+.day .gio { font-size: .85rem; }
+@media (max-width: 560px) { .day { grid-template-columns: 1fr 1fr; } .day .dr { grid-column: 1 / -1; } }
+
+footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem; display: grid; gap: 6px; max-width: 70ch; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="cover">
+    <div class="seal" aria-hidden="true"><span>擇</span><span>日</span><span>風</span><span>水</span></div>
+    <div class="t">
+      <h1>Sổ Phong Thủy</h1>
+      <p>Lịch âm, lá số, xem nhà và chọn ngày giờ cưới hỏi, tang lễ.</p>
+    </div>
+    <label class="zone"><span class="label">Lịch âm theo</span>
+      <select id="tz">
+        <option value="7">Việt Nam (UTC+7)</option>
+        <option value="8">Trung Quốc (UTC+8)</option>
+      </select>
+    </label>
+  </header>
+
+  <nav class="tabs" aria-label="Các trang sổ">
+    <a href="#hom-nay" data-tab="hom-nay">Lịch ngày</a>
+    <a href="#la-so" data-tab="la-so">Lá số tuổi</a>
+    <a href="#xem-nha" data-tab="xem-nha">Xem nhà</a>
+    <a href="#cuoi-hoi" data-tab="cuoi-hoi">Cưới hỏi</a>
+    <a href="#tang-le" data-tab="tang-le">Tang lễ, hạ huyệt</a>
+  </nav>
+
+  <!-- LỊCH NGÀY -->
+  <section class="page" id="p-hom-nay">
+    <form class="inputs" onsubmit="return false">
+      <label>Chọn ngày dương lịch<input type="date" id="d-date"></label>
+    </form>
+    <div id="d-out"></div>
+  </section>
+
+  <!-- LÁ SỐ -->
+  <section class="page" id="p-la-so" hidden>
+    <p class="intro">Từ ngày giờ sinh, sổ tính ra năm âm lịch, Tứ trụ (Bát tự), mệnh nạp âm và cung phi Bát trạch.</p>
+    <form class="inputs" onsubmit="return false">
+      <span class="example">Đang điền sẵn ví dụ, hãy sửa thành của bạn</span>
+      <label>Ngày sinh (dương lịch)<input type="date" id="l-date" value="1990-05-15"></label>
+      <label>Giờ sinh<select id="l-hour"></select></label>
+      <label>Giới tính<select id="l-sex"><option value="1">Nam</option><option value="0">Nữ</option></select></label>
+    </form>
+    <div id="l-out" class="page"></div>
+  </section>
+
+  <!-- XEM NHÀ -->
+  <section class="page" id="p-xem-nha" hidden>
+    <p class="intro">Xem tuổi làm nhà theo ba hạn Kim Lâu, Hoang Ốc, Tam Tai; xem hướng nhà theo Bát trạch; rồi chọn ngày động thổ.</p>
+    <form class="inputs" onsubmit="return false">
+      <span class="example">Đang điền sẵn ví dụ</span>
+      <label>Ngày sinh chủ nhà<input type="date" id="n-date" value="1985-06-10"></label>
+      <label>Giới tính<select id="n-sex"><option value="1">Nam</option><option value="0">Nữ</option></select></label>
+      <label>Năm định làm nhà<input type="number" id="n-year" min="1900" max="2200" value="2027"></label>
+      <label>Hướng nhà (hướng cửa chính)<select id="n-dir"></select></label>
+      <span class="grp">Chọn ngày động thổ</span>
+      <label>Từ ngày<input type="date" id="n-from"></label>
+      <label>Trong khoảng<select id="n-span"><option value="30">30 ngày</option><option value="60" selected>60 ngày</option><option value="90">90 ngày</option></select></label>
+    </form>
+    <div id="n-out" class="page"></div>
+  </section>
+
+  <!-- CƯỚI HỎI -->
+  <section class="page" id="p-cuoi-hoi" hidden>
+    <p class="intro">Xem tuổi hai bên có hợp không, cô dâu có phạm Kim Lâu năm cưới không, rồi lọc ngày và giờ tốt, tránh ngày xung tuổi.</p>
+    <form class="inputs" onsubmit="return false">
+      <span class="example">Đang điền sẵn ví dụ</span>
+      <label>Ngày sinh chú rể<input type="date" id="c-groom" value="1996-03-12"></label>
+      <label>Ngày sinh cô dâu<input type="date" id="c-bride" value="1998-08-20"></label>
+      <label>Tìm ngày từ<input type="date" id="c-from"></label>
+      <label>Trong khoảng<select id="c-span"><option value="30">30 ngày</option><option value="60" selected>60 ngày</option><option value="90">90 ngày</option></select></label>
+    </form>
+    <div id="c-out" class="page"></div>
+  </section>
+
+  <!-- TANG LỄ -->
+  <section class="page" id="p-tang-le" hidden>
+    <p class="intro">Chọn ngày an táng và giờ hạ huyệt: tránh Trùng Tang, Trùng Phục, ngày giờ xung tuổi người mất và tuổi tang chủ.</p>
+    <form class="inputs" onsubmit="return false">
+      <span class="example">Đang điền sẵn ví dụ</span>
+      <label>Năm sinh âm lịch người mất<input type="number" id="t-dead" min="1850" max="2200" value="1940"></label>
+      <label>Năm sinh âm lịch tang chủ<input type="number" id="t-host" min="1850" max="2200" value="1968" placeholder="Để trống nếu chưa rõ"></label>
+      <label>Từ ngày<input type="date" id="t-from"></label>
+      <label>Trong khoảng<select id="t-span"><option value="7">7 ngày</option><option value="15" selected>15 ngày</option><option value="30">30 ngày</option></select></label>
+    </form>
+    <div id="t-out" class="page"></div>
+  </section>
+
+  <footer>
+    <p><b>Cách đọc kết quả.</b> Phần lịch âm, Can Chi, tiết khí được tính bằng công thức thiên văn (thuật toán của Hồ Ngọc Đức), đổi theo múi giờ bạn chọn ở trên. Phần tốt xấu là quy tắc dân gian phổ biến: hoàng đạo, thập nhị trực, Tam Nương, Nguyệt Kỵ, Trùng Tang, xung hợp tuổi.</p>
+    <p>Mỗi thầy, mỗi vùng có thể xem khác. Với việc lớn trong nhà, hãy coi đây là bản nháp để đối chiếu với người có kinh nghiệm.</p>
+  </footer>
+</div>
+
+<script src="phongthuy-core.js"></script>
+<script>
+(function () {
+  'use strict';
+  const P = window.PT;
+  const $ = s => document.querySelector(s);
+  const THU = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
+  const MUC = { tot: 'Tốt', kha: 'Dùng được', xau: 'Không nên', tranh: 'Tránh' };
+  const tz = () => +$('#tz').value;
+  const pad = n => String(n).padStart(2, '0');
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+  const ymd = s => s.split('-').map(Number);
+  const lunarTxt = L => `${L.day}/${L.month}${L.leap ? ' (nhuận)' : ''}`;
+  const validDate = s => /^\d{4}-\d{2}-\d{2}$/.test(s || '');
+
+  // Lưu tiện ích: múi giờ đã chọn
+  try { const z = localStorage.getItem('pt-tz'); if (z) $('#tz').value = z; } catch (e) {}
+
+  // Điền select
+  $('#l-hour').innerHTML = '<option value="-1">Không rõ giờ</option>' + P.CHI.map((c, i) => `<option value="${i}"${i === 6 ? ' selected' : ''}>Giờ ${c} (${P.GIO[i]})</option>`).join('');
+  $('#n-dir').innerHTML = P.HUONG.map(h => `<option${h === 'Nam' ? ' selected' : ''}>${h}</option>`).join('');
+  ['#d-date', '#n-from', '#c-from', '#t-from'].forEach(id => { $(id).value = todayStr; });
+
+  /* ---------- Lịch ngày ---------- */
+  function hoursGrid(info, people) {
+    return '<div class="hours">' + info.gio.map(g => {
+      const xung = (people || []).some(p => P.isXung(g.chi, p.chi));
+      const on = g.tot && !xung;
+      return `<div class="h${on ? ' on' : ''}" title="${on ? 'Giờ hoàng đạo' : 'Giờ hắc đạo hoặc xung tuổi'}"><b>${g.ten}</b>${g.khung}</div>`;
+    }).join('') + '</div>';
+  }
+  function renderDay() {
+    const s = $('#d-date').value; if (!validDate(s)) return;
+    const [y, m, d] = ymd(s);
+    const info = P.dayInfo(d, m, y, tz());
+    const other = P.solarToLunar(d, m, y, tz() === 7 ? 8 : 7);
+    const otherName = tz() === 7 ? 'Trung Quốc' : 'Việt Nam';
+    const same = other.day === info.lunar.day && other.month === info.lunar.month && other.year === info.lunar.year;
+    const xau = [info.tamNuong && 'Tam Nương', info.nguyetKy && 'Nguyệt Kỵ'].filter(Boolean);
+    $('#d-out').innerHTML = `
+      <div class="page">
+      <article class="bloc">
+        <div class="solar">
+          <div class="label">Tháng ${m} năm ${y}</div>
+          <div class="big">${d}</div>
+          <div class="dow">${THU[info.dow]}</div>
+        </div>
+        <div class="lunar">
+          <div class="ld"><span class="n">${lunarTxt(info.lunar)}</span><span class="muted">âm lịch, năm ${info.nam}</span></div>
+          <div class="chips">
+            <span class="pill ${info.hoangDao ? 'good' : 'bad'}">${info.hoangDao ? 'Hoàng đạo' : 'Hắc đạo'}: ${info.than}</span>
+            ${xau.map(x => `<span class="pill bad">${x}</span>`).join('')}
+          </div>
+          <dl class="kv">
+            <dt>Ngày</dt><dd>${info.ngay} (${info.hanhNgay.name})</dd>
+            <dt>Tháng</dt><dd>${info.thang}</dd>
+            <dt>Năm</dt><dd>${info.nam}</dd>
+            <dt>Trực</dt><dd>${info.truc}</dd>
+            <dt>Tiết khí</dt><dd>${info.tiet}</dd>
+            <dt>Tuổi xung</dt><dd>${P.CHI[(info.chiNgay + 6) % 12]}</dd>
+          </dl>
+        </div>
+      </article>
+      <div class="panel"><h3>Giờ hoàng đạo</h3>${hoursGrid(info)}</div>
+      <p class="note">${same
+        ? `Ngày này lịch Việt Nam và lịch ${otherName} trùng nhau.`
+        : `Theo lịch ${otherName}, ngày này là <b>${lunarTxt(other)}</b> năm ${P.canChi(P.yearCan(other.year), P.yearChi(other.year))}. Hai lịch lệch nhau vì tính điểm Sóc theo múi giờ khác nhau.`}
+        Thử ngày 21/1/1985 để thấy Tết Ất Sửu ở Việt Nam sớm hơn Trung Quốc đúng một tháng.</p>
+      </div>`;
+  }
+
+  /* ---------- Lá số ---------- */
+  function personCard(p, title) {
+    return `<div class="panel">
+      <div class="label">${title}</div>
+      <div class="headline">${p.ten} <span class="muted small">tuổi ${p.conGiap}</span></div>
+      <dl class="kv">
+        <dt>Năm âm lịch</dt><dd>${p.lunarYear}</dd>
+        <dt>Mệnh</dt><dd>${p.napAm.name} (hành ${P.HANH[p.napAm.hanh]})</dd>
+        <dt>Cung phi</dt><dd>${p.cung.ten} (${p.cung.hanh}), ${p.cung.nhom}</dd>
+      </dl></div>`;
+  }
+  function renderLaSo() {
+    const s = $('#l-date').value; if (!validDate(s)) return;
+    const male = $('#l-sex').value === '1';
+    const p = P.person(s, male, tz(), 'bạn');
+    const L = p.lunar, jd = L.jd, h = +$('#l-hour').value;
+    const pillars = [
+      ['Năm', P.yearCan(L.year), P.yearChi(L.year)],
+      ['Tháng', P.monthCan(L.year, L.month), P.monthChi(L.month)],
+      ['Ngày', P.dayCan(jd), P.dayChi(jd)],
+      ['Giờ', h >= 0 ? P.hourCan(jd, h) : -1, h],
+    ];
+    const curLunarYear = P.solarToLunar(today.getDate(), today.getMonth() + 1, today.getFullYear(), tz()).year;
+    const age = P.tuoiMu(p, curLunarYear);
+    const good = p.cung.list.slice(0, 4), bad = p.cung.list.slice(4);
+    $('#l-out').innerHTML = `
+      <div class="pillars">${pillars.map(([n, c, z]) => `<div class="pillar"><div class="label">Trụ ${n}</div>
+        ${c >= 0 ? `<div class="c">${P.CAN[c]}</div><div class="z">${P.CHI[z]}</div><div class="hh">${P.HANH[Math.floor(c / 2)]} / ${P.HANH[P.CHI_HANH[z]]}</div>` : '<div class="z muted">?</div><div class="hh">chưa rõ giờ</div>'}
+      </div>`).join('')}</div>
+      <p class="muted small">Sinh ngày ${lunarTxt(L)} âm lịch. Trụ tháng tính theo tháng âm lịch. Người sinh sau 23h nên chọn giờ Tý của ngày hôm sau.</p>
+      <div class="grid2">
+        ${personCard(p, 'Tuổi')}
+        <div class="panel"><div class="label">Năm ${curLunarYear} (tuổi mụ ${age})</div>
+          ${yearChecks(p, curLunarYear)}
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="panel"><h3>Bốn hướng tốt</h3>${dirList(p, good)}</div>
+        <div class="panel"><h3>Bốn hướng xấu</h3>${dirList(p, bad)}</div>
+      </div>`;
+  }
+  function dirList(p, dirs) {
+    return '<table><tbody>' + dirs.map(h => { const s = p.cung.dirs[h]; return `<tr><td><b>${h}</b></td><td class="${s.good ? 'ok' : 'no'}">${s.n}</td><td class="muted">${s.y}</td></tr>`; }).join('') + '</tbody></table>';
+  }
+  function yearChecks(p, ly) {
+    const age = P.tuoiMu(p, ly), kl = P.kimLau(age), ho = P.hoangOc(age), tt = P.tamTai(p, P.yearChi(ly));
+    return `<div class="grid3">
+      <div class="verdict ${kl.pham ? 'bad' : 'good'}"><span class="label">Kim Lâu</span><span class="v">${kl.pham ? 'Phạm' : 'Không phạm'}</span><span class="small muted">${kl.pham ? kl.ten : 'Tuổi mụ ' + age + ' chia 9 dư ' + (age % 9)}</span></div>
+      <div class="verdict ${ho.tot ? 'good' : 'bad'}"><span class="label">Hoang Ốc</span><span class="v">${ho.ten}</span><span class="small muted">${ho.y}</span></div>
+      <div class="verdict ${tt.pham ? 'bad' : 'good'}"><span class="label">Tam Tai</span><span class="v">${tt.pham ? 'Phạm' : 'Không phạm'}</span><span class="small muted">Tuổi ${P.CHI[p.chi]} gặp Tam Tai các năm ${tt.years.join(', ')}</span></div>
+    </div>`;
+  }
+
+  /* ---------- La bàn ---------- */
+  function compass(p, chosen) {
+    const R = 140, r0 = 52, cx = 170, cy = 170;
+    const pt = (deg, rr) => { const a = (deg - 90) * Math.PI / 180; return [cx + rr * Math.cos(a), cy + rr * Math.sin(a)]; };
+    let out = `<svg class="compass" viewBox="0 0 340 340" role="img" aria-label="La bàn Bát trạch cung ${p.cung.ten}">`;
+    P.HUONG.forEach((h, i) => {
+      const s = p.cung.dirs[h], c = i * 45, a0 = c - 22.5, a1 = c + 22.5;
+      const [x0, y0] = pt(a0, R), [x1, y1] = pt(a1, R), [x2, y2] = pt(a1, r0), [x3, y3] = pt(a0, r0);
+      const fill = s.good ? 'var(--jade-soft)' : 'var(--son-soft)';
+      const stroke = h === chosen ? 'var(--ink)' : 'var(--card)';
+      out += `<path d="M${x0},${y0} A${R},${R} 0 0 1 ${x1},${y1} L${x2},${y2} A${r0},${r0} 0 0 0 ${x3},${y3} Z" fill="${fill}" stroke="${stroke}" stroke-width="${h === chosen ? 3 : 2}"/>`;
+      const [tx, ty] = pt(c, 98), [lx, ly] = pt(c, 70);
+      out += `<text x="${tx}" y="${ty}" text-anchor="middle" dominant-baseline="middle" font-size="12" font-weight="600" fill="var(--ink)">${h}</text>`;
+      out += `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle" font-size="10.5" fill="${s.good ? 'var(--jade)' : 'var(--son)'}">${s.n}</text>`;
+    });
+    out += `<circle cx="${cx}" cy="${cy}" r="${r0 - 4}" fill="var(--card)" stroke="var(--line)"/>`;
+    out += `<text x="${cx}" y="${cy - 8}" text-anchor="middle" font-size="11" fill="var(--muted)">cung</text>`;
+    out += `<text x="${cx}" y="${cy + 14}" text-anchor="middle" font-size="22" font-weight="700" fill="var(--son)" style="font-family:var(--f-display)">${p.cung.ten}</text>`;
+    const [nx, ny] = pt(0, 158);
+    out += `<text x="${nx}" y="${ny}" text-anchor="middle" dominant-baseline="middle" font-size="12" font-weight="700" fill="var(--son)">N</text>`;
+    return out + '</svg>';
+  }
+
+  /* ---------- Danh sách ngày ---------- */
+  function dayList(containerId, days, people, gioLabel) {
+    const box = document.getElementById(containerId);
+    const onlyGood = box.querySelector('input[type=checkbox]')?.checked ?? true;
+    const list = days.filter(x => !onlyGood || x.danh.muc === 'tot' || x.danh.muc === 'kha');
+    const nTot = days.filter(x => x.danh.muc === 'tot').length, nKha = days.filter(x => x.danh.muc === 'kha').length;
+    box.querySelector('.count').textContent = `${nTot} ngày tốt, ${nKha} ngày dùng được trong ${days.length} ngày`;
+    box.querySelector('.days').innerHTML = list.length ? list.map(x => `
+      <article class="day ${x.danh.muc}">
+        <div class="dd"><b>${x.solar.d}/${x.solar.m}</b><span>${THU[x.dow]}, ${x.solar.y}</span></div>
+        <div class="dl">Âm <b>${lunarTxt(x.lunar)}</b><br>${x.ngay}<br>Trực ${x.truc}</div>
+        <div class="dr">
+          <div><span class="pill ${x.danh.muc}">${MUC[x.danh.muc]}</span></div>
+          <div class="why">${x.danh.tot.map(t => `<span class="g">+ ${t}</span>`).join(' · ')}${x.danh.tot.length && x.danh.xau.length ? ' · ' : ''}${x.danh.xau.map(t => `<span class="x">− ${t}</span>`).join(' · ')}</div>
+          <div class="gio"><span class="muted">${gioLabel}:</span> ${x.danh.gio.length ? x.danh.gio.map(g => `<b>${g.ten}</b> ${g.khung}`).join(', ') : 'không có giờ phù hợp'}</div>
+        </div>
+      </article>`).join('') : '<p class="muted">Không có ngày phù hợp trong khoảng này. Hãy nới rộng khoảng ngày hoặc bỏ lọc.</p>';
+  }
+  function dayListShell(id, title) {
+    return `<div class="panel" id="${id}">
+      <div class="daybar"><h3>${title}</h3><label><input type="checkbox" id="${id}-only" checked> Chỉ hiện ngày dùng được</label></div>
+      <p class="count muted small"></p><div class="days"></div></div>`;
+  }
+
+  /* ---------- Xem nhà ---------- */
+  let nhaDays = [], nhaPeople = [];
+  function renderNha() {
+    const s = $('#n-date').value, yr = +$('#n-year').value; if (!validDate(s) || !(yr > 1800)) return;
+    const male = $('#n-sex').value === '1', dir = $('#n-dir').value;
+    const p = P.person(s, male, tz(), 'chủ nhà');
+    const age = P.tuoiMu(p, yr), kl = P.kimLau(age), ho = P.hoangOc(age), tt = P.tamTai(p, P.yearChi(yr));
+    const okYear = !kl.pham && ho.tot && !tt.pham;
+    const s8 = p.cung.dirs[dir];
+    const rows = [];
+    for (let y = yr; y < yr + 10; y++) {
+      const a = P.tuoiMu(p, y), k = P.kimLau(a), h = P.hoangOc(a), t = P.tamTai(p, P.yearChi(y));
+      const ok = !k.pham && h.tot && !t.pham;
+      rows.push(`<tr><td><b>${y}</b> ${P.canChi(P.yearCan(y), P.yearChi(y))}</td><td>${a}</td><td class="${k.pham ? 'no' : 'ok'}">${k.pham ? 'Phạm' : 'Không'}</td><td class="${h.tot ? 'ok' : 'no'}">${h.ten}</td><td class="${t.pham ? 'no' : 'ok'}">${t.pham ? 'Phạm' : 'Không'}</td><td class="${ok ? 'ok' : 'no'}">${ok ? 'Làm được' : 'Nên tránh'}</td></tr>`);
+    }
+    $('#n-out').innerHTML = `
+      <div class="panel">
+        <div class="label">Chủ nhà ${p.ten}, năm ${yr} ${P.canChi(P.yearCan(yr), P.yearChi(yr))}, tuổi mụ ${age}</div>
+        <div class="headline ${okYear ? 'good' : 'bad'}">${okYear ? 'Năm này làm nhà được' : 'Năm này phạm hạn, nên mượn tuổi hoặc dời năm'}</div>
+        ${yearChecks(p, yr)}
+        ${okYear ? '' : '<p class="small muted">Cách dân gian hay làm: nhờ người hợp tuổi, không phạm hạn đứng ra động thổ thay chủ nhà, chủ nhà tránh mặt lúc làm lễ.</p>'}
+      </div>
+      <div class="panel">
+        <h3>Hướng nhà theo Bát trạch</h3>
+        <div class="compass-wrap">
+          ${compass(p, dir)}
+          <div style="display:grid;gap:12px;min-width:0">
+            <p>Chủ nhà cung <b>${p.cung.ten}</b>, thuộc <b>${p.cung.nhom}</b>.</p>
+            <div class="verdict ${s8.good ? 'good' : 'bad'}"><span class="label">Nhà hướng ${dir}</span><span class="v">${s8.n}</span><span class="small muted">${s8.y}</span></div>
+            <p class="small muted">${s8.good ? 'Hướng hợp tuổi chủ nhà.' : 'Hướng không hợp. Có thể chọn một trong các hướng tốt: ' + p.cung.list.slice(0, 4).join(', ') + '. Nếu không đổi được hướng, người ta thường đặt bếp, bàn thờ, giường ngủ quay về hướng tốt để bù lại.'}</p>
+          </div>
+        </div>
+      </div>
+      <div class="panel"><h3>Mười năm tới</h3><div class="scroll"><table>
+        <thead><tr><th>Năm</th><th>Tuổi mụ</th><th>Kim Lâu</th><th>Hoang Ốc</th><th>Tam Tai</th><th>Kết luận</th></tr></thead>
+        <tbody>${rows.join('')}</tbody></table></div></div>
+      ${dayListShell('n-days', 'Ngày động thổ')}`;
+    nhaPeople = [p];
+    const from = $('#n-from').value;
+    nhaDays = validDate(from) ? P.findDays(from, +$('#n-span').value, 'nha', nhaPeople, tz()) : [];
+    $('#n-days-only').addEventListener('change', () => dayList('n-days', nhaDays, nhaPeople, 'Giờ động thổ'));
+    dayList('n-days', nhaDays, nhaPeople, 'Giờ động thổ');
+  }
+
+  /* ---------- Cưới hỏi ---------- */
+  let cuoiDays = [], cuoiPeople = [];
+  function renderCuoi() {
+    const gs = $('#c-groom').value, bs = $('#c-bride').value, from = $('#c-from').value;
+    if (!validDate(gs) || !validDate(bs) || !validDate(from)) return;
+    const g = P.person(gs, true, tz(), 'chú rể'), b = P.person(bs, false, tz(), 'cô dâu');
+    const rels = P.chiRel(g.chi, b.chi);
+    const na = P.nguHanhRel(g.napAm.hanh, b.napAm.hanh);
+    const naTxt = { 'sinh': [true, `Mệnh chồng (${P.HANH[g.napAm.hanh]}) sinh mệnh vợ (${P.HANH[b.napAm.hanh]})`], 'được sinh': [true, `Mệnh vợ (${P.HANH[b.napAm.hanh]}) sinh mệnh chồng (${P.HANH[g.napAm.hanh]})`], 'hòa': [null, `Hai mệnh cùng hành ${P.HANH[g.napAm.hanh]}`], 'khắc': [false, `Mệnh chồng (${P.HANH[g.napAm.hanh]}) khắc mệnh vợ (${P.HANH[b.napAm.hanh]})`], 'bị khắc': [false, `Mệnh vợ (${P.HANH[b.napAm.hanh]}) khắc mệnh chồng (${P.HANH[g.napAm.hanh]})`] }[na];
+    const cp = g.cung.dirs[b.cung.huongGoc];
+    const items = [
+      ...rels.map(r => [r.good, `Tuổi ${P.CHI[g.chi]} và ${P.CHI[b.chi]}: ${r.t}`]),
+      naTxt,
+      [cp.good, `Cung phi ${g.cung.ten} và ${b.cung.ten}: ${cp.n}`],
+    ];
+    if (!rels.length) items.unshift([null, `Tuổi ${P.CHI[g.chi]} và ${P.CHI[b.chi]}: không xung không hợp`]);
+    const score = items.reduce((a, [ok]) => a + (ok === true ? 1 : ok === false ? -1 : 0), 0);
+    const [fy, fm, fd] = ymd(from);
+    const ly = P.solarToLunar(fd, fm, fy, tz()).year;
+    const klYears = [];
+    for (let y = ly; y < ly + 6; y++) { const k = P.kimLau(P.tuoiMu(b, y)); klYears.push(`<tr><td><b>${y}</b> ${P.canChi(P.yearCan(y), P.yearChi(y))}</td><td>${P.tuoiMu(b, y)}</td><td class="${k.pham ? 'no' : 'ok'}">${k.pham ? k.ten : 'Không phạm, cưới được'}</td></tr>`); }
+    const klNow = P.kimLau(P.tuoiMu(b, ly));
+    $('#c-out').innerHTML = `
+      <div class="grid2">${personCard(g, 'Chú rể')}${personCard(b, 'Cô dâu')}</div>
+      <div class="panel">
+        <h3>Hợp tuổi</h3>
+        <div class="headline ${score > 0 ? 'good' : score < 0 ? 'bad' : ''}">${score >= 2 ? 'Hai tuổi hợp nhau' : score > 0 ? 'Khá hợp' : score === 0 ? 'Bình hòa, không xung không hợp' : 'Có điểm xung, nên xem kỹ'}</div>
+        <table><tbody>${items.map(([ok, t]) => `<tr><td class="${ok === true ? 'ok' : ok === false ? 'no' : 'muted'}">${ok === true ? 'Tốt' : ok === false ? 'Xấu' : 'Bình'}</td><td>${t}</td></tr>`).join('')}</tbody></table>
+      </div>
+      <div class="panel">
+        <h3>Kim Lâu của cô dâu</h3>
+        <div class="verdict ${klNow.pham ? 'bad' : 'good'}"><span class="label">Năm ${ly} ${P.canChi(P.yearCan(ly), P.yearChi(ly))}, cô dâu tuổi mụ ${P.tuoiMu(b, ly)}</span><span class="v">${klNow.pham ? 'Phạm ' + klNow.ten : 'Không phạm Kim Lâu'}</span></div>
+        <div class="scroll"><table><thead><tr><th>Năm âm</th><th>Tuổi mụ cô dâu</th><th>Kim Lâu</th></tr></thead><tbody>${klYears.join('')}</tbody></table></div>
+        ${klNow.pham ? '<p class="small muted">Năm phạm Kim Lâu, nhiều nhà chọn cưới sau Đông chí, hoặc làm lễ "xin dâu hai lần" theo tục lệ địa phương.</p>' : ''}
+      </div>
+      ${dayListShell('c-days', 'Ngày cưới')}`;
+    cuoiPeople = [g, b];
+    cuoiDays = P.findDays(from, +$('#c-span').value, 'cuoi', cuoiPeople, tz());
+    $('#c-days-only').addEventListener('change', () => dayList('c-days', cuoiDays, cuoiPeople, 'Giờ đón dâu, làm lễ'));
+    dayList('c-days', cuoiDays, cuoiPeople, 'Giờ đón dâu, làm lễ');
+  }
+
+  /* ---------- Tang lễ ---------- */
+  let tangDays = [], tangPeople = [];
+  function renderTang() {
+    const dy = +$('#t-dead').value, hy = +$('#t-host').value, from = $('#t-from').value;
+    if (!(dy > 1800) || !validDate(from)) return;
+    const dead = P.personFromLunarYear(dy, true, 'người mất');
+    tangPeople = [dead];
+    if (hy > 1800) tangPeople.push(P.personFromLunarYear(hy, true, 'tang chủ'));
+    tangDays = P.findDays(from, +$('#t-span').value, 'tang', tangPeople, tz());
+    $('#t-out').innerHTML = `
+      <div class="grid2">${tangPeople.map(p => `<div class="panel"><div class="label">${p.label}</div><div class="headline">${p.ten} <span class="muted small">tuổi ${p.conGiap}</span></div><p class="small muted">Tránh ngày và giờ ${P.CHI[(p.chi + 6) % 12]} (xung tuổi ${P.CHI[p.chi]}).</p></div>`).join('')}</div>
+      <p class="note">Ngày Trùng Tang, Trùng Phục được tính theo Can ngày và tháng âm lịch. Giờ hạ huyệt gợi ý là giờ hoàng đạo, đã bỏ giờ xung tuổi người mất và tang chủ.</p>
+      ${dayListShell('t-days', 'Ngày an táng')}`;
+    $('#t-days-only').addEventListener('change', () => dayList('t-days', tangDays, tangPeople, 'Giờ hạ huyệt'));
+    dayList('t-days', tangDays, tangPeople, 'Giờ hạ huyệt');
+  }
+
+  /* ---------- Điều hướng ---------- */
+  const RENDER = { 'hom-nay': renderDay, 'la-so': renderLaSo, 'xem-nha': renderNha, 'cuoi-hoi': renderCuoi, 'tang-le': renderTang };
+  function current() { const h = location.hash.slice(1); return RENDER[h] ? h : 'hom-nay'; }
+  function show() {
+    const cur = current();
+    document.querySelectorAll('section.page[id^="p-"]').forEach(s => { s.hidden = s.id !== 'p-' + cur; });
+    document.querySelectorAll('nav.tabs a').forEach(a => { if (a.dataset.tab === cur) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+    const act = document.querySelector('nav.tabs a[aria-current]'), nav = act.parentElement;
+    nav.scrollLeft = act.offsetLeft - (nav.clientWidth - act.offsetWidth) / 2;
+    RENDER[cur]();
+  }
+  window.addEventListener('hashchange', show);
+  document.querySelectorAll('section.page[id^="p-"] form').forEach(f => f.addEventListener('input', () => RENDER[current()]()));
+  $('#tz').addEventListener('change', () => { try { localStorage.setItem('pt-tz', $('#tz').value); } catch (e) {} RENDER[current()](); });
+  show();
+})();
+</script>

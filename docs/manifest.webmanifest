@@ -1,0 +1,44 @@
+{
+  "name": "Sổ Phong Thủy",
+  "short_name": "Phong Thủy",
+  "description": "Lịch âm, lá số, xem nhà, chọn ngày cưới hỏi và tang lễ.",
+  "lang": "vi",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#EDEFE8",
+  "theme_color": "#B42318",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Lịch hôm nay",
+      "url": "./#hom-nay"
+    },
+    {
+      "name": "Chọn ngày cưới",
+      "url": "./#cuoi-hoi"
+    },
+    {
+      "name": "Xem nhà",
+      "url": "./#xem-nha"
+    }
+  ]
+}
